@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Calculator, Plane, Hotel, Utensils, Camera, Car, Plus, Trash2, IndianRupee, DollarSign } from "lucide-react";
+import { Calculator, Plane, Hotel, Utensils, Camera, Car, Plus, Trash2, IndianRupee, DollarSign, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { City } from "@/components/CityExplorer";
 
 type ExpenseItem = {
   id: string;
@@ -20,6 +21,16 @@ const categories = [
   { value: "flights", label: "Flights", icon: Plane },
   { value: "other", label: "Other", icon: Plus },
 ];
+
+const getPresetForCity = (city: City): ExpenseItem[] => {
+  const daily = city.budgetPerDay;
+  return [
+    { id: crypto.randomUUID(), category: "accommodation", description: `Stay in ${city.name}`, amount: Math.round(daily * 0.4) },
+    { id: crypto.randomUUID(), category: "food", description: `Meals in ${city.name}`, amount: Math.round(daily * 0.25) },
+    { id: crypto.randomUUID(), category: "transport", description: `Local transport`, amount: Math.round(daily * 0.15) },
+    { id: crypto.randomUUID(), category: "activities", description: `${city.highlights[0] || "Sightseeing"}`, amount: Math.round(daily * 0.2) },
+  ];
+};
 
 const presets = {
   india: {
@@ -42,7 +53,11 @@ const presets = {
   },
 };
 
-const ExpenseCalculator = () => {
+type Props = {
+  selectedCity?: City | null;
+};
+
+const ExpenseCalculator = ({ selectedCity }: Props) => {
   const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
   const [currency, setCurrency] = useState<"INR" | "USD">("INR");
   const [days, setDays] = useState(1);
@@ -50,32 +65,32 @@ const ExpenseCalculator = () => {
   const [newCategory, setNewCategory] = useState("transport");
   const [newDescription, setNewDescription] = useState("");
   const [newAmount, setNewAmount] = useState("");
+  const [activeCityName, setActiveCityName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (selectedCity) {
+      setExpenses(getPresetForCity(selectedCity));
+      setCurrency(selectedCity.region === "india" ? "INR" : "USD");
+      setActiveCityName(selectedCity.name);
+      setDays(3);
+    }
+  }, [selectedCity]);
 
   const addExpense = () => {
     if (!newDescription || !newAmount) return;
     setExpenses([
       ...expenses,
-      {
-        id: crypto.randomUUID(),
-        category: newCategory,
-        description: newDescription,
-        amount: parseFloat(newAmount),
-      },
+      { id: crypto.randomUUID(), category: newCategory, description: newDescription, amount: parseFloat(newAmount) },
     ]);
     setNewDescription("");
     setNewAmount("");
   };
 
-  const removeExpense = (id: string) => {
-    setExpenses(expenses.filter((e) => e.id !== id));
-  };
+  const removeExpense = (id: string) => setExpenses(expenses.filter((e) => e.id !== id));
 
   const loadPreset = (preset: "india" | "international") => {
-    const items = presets[preset].items.map((item) => ({
-      ...item,
-      id: crypto.randomUUID(),
-    }));
-    setExpenses(items);
+    setExpenses(presets[preset].items.map((item) => ({ ...item, id: crypto.randomUUID() })));
+    setActiveCityName(null);
   };
 
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
@@ -90,7 +105,7 @@ const ExpenseCalculator = () => {
   };
 
   return (
-    <section id="calculator" className="py-20 bg-background">
+    <section id="calculator" className="py-24 bg-background">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -105,9 +120,16 @@ const ExpenseCalculator = () => {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4">
             Trip Expense Calculator
           </h2>
-          <p className="text-muted-foreground font-body max-w-xl mx-auto">
-            Plan your budget for India or any destination worldwide
-          </p>
+          {activeCityName ? (
+            <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2 mt-2">
+              <MapPin className="w-4 h-4 text-primary" />
+              <span className="font-body font-semibold text-primary">Calculating for {activeCityName}</span>
+            </div>
+          ) : (
+            <p className="text-muted-foreground font-body max-w-xl mx-auto">
+              Select a city above or add expenses manually
+            </p>
+          )}
         </motion.div>
 
         <div className="max-w-4xl mx-auto grid md:grid-cols-5 gap-8">
@@ -118,7 +140,6 @@ const ExpenseCalculator = () => {
             viewport={{ once: true }}
             className="md:col-span-3 glass-card p-6 space-y-6"
           >
-            {/* Quick presets */}
             <div>
               <p className="text-sm font-body font-medium text-foreground mb-3">Quick Presets</p>
               <div className="flex gap-3">
@@ -131,7 +152,6 @@ const ExpenseCalculator = () => {
               </div>
             </div>
 
-            {/* Trip settings */}
             <div className="grid grid-cols-3 gap-4">
               <div>
                 <label className="text-xs font-body text-muted-foreground mb-1 block">Currency</label>
@@ -153,7 +173,6 @@ const ExpenseCalculator = () => {
               </div>
             </div>
 
-            {/* Add expense */}
             <div className="space-y-3">
               <p className="text-sm font-body font-medium text-foreground">Add Expense</p>
               <div className="flex gap-2">
@@ -173,11 +192,10 @@ const ExpenseCalculator = () => {
               </div>
             </div>
 
-            {/* Expense list */}
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {expenses.length === 0 && (
                 <p className="text-center text-muted-foreground text-sm py-8 font-body">
-                  No expenses yet. Add items or load a preset!
+                  No expenses yet. Select a destination or load a preset!
                 </p>
               )}
               {expenses.map((expense, i) => {
@@ -214,7 +232,9 @@ const ExpenseCalculator = () => {
             className="md:col-span-2 space-y-4"
           >
             <div className="glass-card p-6 gradient-primary text-primary-foreground">
-              <p className="text-sm opacity-80 font-body mb-1">Total Trip Cost</p>
+              <p className="text-sm opacity-80 font-body mb-1">
+                {activeCityName ? `${activeCityName} Trip Cost` : "Total Trip Cost"}
+              </p>
               <div className="flex items-baseline gap-1">
                 {currency === "INR" ? <IndianRupee className="w-6 h-6" /> : <DollarSign className="w-6 h-6" />}
                 <span className="text-4xl font-display font-bold">
