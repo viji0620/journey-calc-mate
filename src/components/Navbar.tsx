@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plane, Menu, X, LogIn, UserPlus, LogOut, User } from "lucide-react";
+import { Plane, Menu, X, LogIn, UserPlus, LogOut, User, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -48,12 +48,13 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-3">
           {user ? (
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 bg-secondary rounded-full px-3 py-1.5">
+              <Link to="/profile" className="flex items-center gap-2 bg-secondary hover:bg-secondary/80 rounded-full px-3 py-1.5 transition-colors">
                 <User className="w-3.5 h-3.5 text-primary" />
                 <span className="text-xs font-body font-medium text-foreground truncate max-w-[120px]">
                   {user.user_metadata?.full_name || user.email}
                 </span>
-              </div>
+                <Settings className="w-3 h-3 text-muted-foreground" />
+              </Link>
               <Button variant="outline" size="sm" onClick={signOut} className="font-body text-xs rounded-full border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-colors">
                 <LogOut className="w-3.5 h-3.5 mr-1" /> Sign Out
               </Button>
