@@ -98,10 +98,10 @@ const Navbar = () => {
             ) : (
               <>
                 <Link to="/login" className="block" onClick={() => setOpen(false)}>
-                  <Button variant="ghost" size="sm" className="w-full font-body">Sign In</Button>
+                  <Button variant="outline" size="sm" className="w-full font-body border-primary text-primary hover:bg-primary hover:text-primary-foreground">Sign In</Button>
                 </Link>
                 <Link to="/register" className="block" onClick={() => setOpen(false)}>
-                  <Button size="sm" className="w-full gradient-accent text-accent-foreground font-body">Sign Up</Button>
+                  <Button size="sm" className="w-full gradient-accent text-accent-foreground font-body shadow-md">Sign Up</Button>
                 </Link>
               </>
             )}
