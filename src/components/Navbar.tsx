@@ -2,6 +2,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Plane, Menu, X } from "lucide-react";
 
+const navItems = [
+  { id: "destinations", label: "Destinations" },
+  { id: "calculator", label: "Calculator" },
+  { id: "guides", label: "Guides" },
+];
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
 
@@ -22,33 +28,30 @@ const Navbar = () => {
           <Plane className="w-5 h-5 text-accent" />
           <span className="font-display font-bold text-lg text-foreground">Travel Buddy</span>
         </div>
-
         <div className="hidden md:flex items-center gap-8">
-          {["destinations", "calculator"].map((id) => (
+          {navItems.map((item) => (
             <button
-              key={id}
-              onClick={() => scrollTo(id)}
-              className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors capitalize"
+              key={item.id}
+              onClick={() => scrollTo(item.id)}
+              className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              {id}
+              {item.label}
             </button>
           ))}
         </div>
-
         <button className="md:hidden" onClick={() => setOpen(!open)}>
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
-
       {open && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="md:hidden bg-background border-b border-border p-4 space-y-3">
-          {["destinations", "calculator"].map((id) => (
+          {navItems.map((item) => (
             <button
-              key={id}
-              onClick={() => scrollTo(id)}
-              className="block w-full text-left font-body text-sm text-muted-foreground hover:text-foreground capitalize"
+              key={item.id}
+              onClick={() => scrollTo(item.id)}
+              className="block w-full text-left font-body text-sm text-muted-foreground hover:text-foreground"
             >
-              {id}
+              {item.label}
             </button>
           ))}
         </motion.div>
