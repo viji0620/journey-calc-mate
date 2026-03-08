@@ -9,13 +9,15 @@ import ExpenseCalculator from "@/components/ExpenseCalculator";
 import GuideProfiles from "@/components/GuideProfiles";
 import TravelChatbot from "@/components/TravelChatbot";
 import Footer from "@/components/Footer";
+import type { City } from "@/components/CityExplorer";
 
 const Index = () => {
   const [showSplash, setShowSplash] = useState(true);
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const handleSplashComplete = useCallback(() => setShowSplash(false), []);
 
-  const scrollToCalculator = () => {
-    document.getElementById("calculator")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToDestinations = () => {
+    document.getElementById("destinations")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -26,10 +28,10 @@ const Index = () => {
       {!showSplash && (
         <>
           <Navbar />
-          <HeroSection onExplore={scrollToCalculator} />
+          <HeroSection onExplore={scrollToDestinations} />
           <FeaturesSection />
-          <CityExplorer />
-          <ExpenseCalculator />
+          <CityExplorer onSelectCity={setSelectedCity} />
+          <ExpenseCalculator selectedCity={selectedCity} />
           <GuideProfiles />
           <Footer />
           <TravelChatbot />
