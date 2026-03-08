@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plane, ChevronDown } from "lucide-react";
+import { Plane, ChevronDown, MapPin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const heroImages = [
   "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&h=1080&fit=crop",
@@ -11,19 +13,21 @@ const heroImages = [
   "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1920&h=1080&fit=crop",
 ];
 
+const destinations = ["Jaipur", "Bali", "Tokyo", "Paris", "Kerala", "Dubai"];
+
 const HeroSection = ({ onExplore }: { onExplore: () => void }) => {
   const [currentImage, setCurrentImage] = useState(0);
+  const [currentDest, setCurrentDest] = useState(0);
+  const { user } = useAuth();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-    return () => clearInterval(interval);
+    const imgInterval = setInterval(() => setCurrentImage((p) => (p + 1) % heroImages.length), 5000);
+    const destInterval = setInterval(() => setCurrentDest((p) => (p + 1) % destinations.length), 2500);
+    return () => { clearInterval(imgInterval); clearInterval(destInterval); };
   }, []);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Cycling background images */}
       <AnimatePresence mode="popLayout">
         <motion.div
           key={currentImage}
@@ -33,39 +37,24 @@ const HeroSection = ({ onExplore }: { onExplore: () => void }) => {
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className="absolute inset-0"
         >
-          <img
-            src={heroImages[currentImage]}
-            alt="Travel destination"
-            className="w-full h-full object-cover"
-          />
+          <img src={heroImages[currentImage]} alt="Travel destination" className="w-full h-full object-cover" />
         </motion.div>
       </AnimatePresence>
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-foreground/60 via-foreground/40 to-foreground/70" />
+      <div className="absolute inset-0 bg-gradient-to-b from-foreground/70 via-foreground/50 to-foreground/80" />
 
       {/* Image indicators */}
       <div className="absolute bottom-24 left-1/2 -translate-x-1/2 flex gap-2 z-20">
         {heroImages.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentImage(i)}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              i === currentImage ? "bg-accent w-6" : "bg-card/50"
-            }`}
-          />
+          <button key={i} onClick={() => setCurrentImage(i)} className={`w-2 h-2 rounded-full transition-all duration-300 ${i === currentImage ? "bg-accent w-6" : "bg-card/40"}`} />
         ))}
       </div>
 
       <div className="relative z-10 container mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
+        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}>
           <div className="inline-flex items-center gap-2 bg-card/10 backdrop-blur-md border border-card/20 rounded-full px-5 py-2 mb-8">
-            <Plane className="w-4 h-4 text-accent" />
-            <span className="text-card/90 text-sm font-body">India & Worldwide Travel</span>
+            <Sparkles className="w-4 h-4 text-accent" />
+            <span className="text-card/90 text-sm font-body">AI-Powered Travel Planning</span>
           </div>
         </motion.div>
 
@@ -73,26 +62,47 @@ const HeroSection = ({ onExplore }: { onExplore: () => void }) => {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-card mb-6 leading-tight"
+          className="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-card mb-4 leading-tight"
         >
-          Your Perfect
+          Discover Your Next
           <br />
-          <span className="text-gradient">Travel Buddy</span>
+          <span className="text-gradient">Adventure</span>
         </motion.h1>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="flex items-center justify-center gap-2 mb-8"
+        >
+          <MapPin className="w-5 h-5 text-accent" />
+          <span className="text-card/70 font-body text-lg">Now exploring</span>
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={currentDest}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-accent font-display font-bold text-xl"
+            >
+              {destinations[currentDest]}
+            </motion.span>
+          </AnimatePresence>
+        </motion.div>
 
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-lg md:text-xl text-card/80 max-w-2xl mx-auto mb-10 font-body"
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="text-lg md:text-xl text-card/70 max-w-2xl mx-auto mb-10 font-body"
         >
-          Plan trips, calculate expenses, and explore destinations across India and beyond.
+          Smart expense calculator, expert local guides, and an AI assistant — everything you need for your perfect trip across India and the world.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.9 }}
           className="flex flex-col sm:flex-row gap-4 justify-center"
         >
           <Button
@@ -100,16 +110,29 @@ const HeroSection = ({ onExplore }: { onExplore: () => void }) => {
             size="lg"
             className="gradient-accent text-accent-foreground font-body font-semibold text-lg px-8 py-6 rounded-full hover:opacity-90 transition-opacity"
           >
-            Plan Your Trip
+            <Plane className="w-5 h-5 mr-2" /> Explore Destinations
           </Button>
-          <Button
-            onClick={() => document.getElementById("guides")?.scrollIntoView({ behavior: "smooth" })}
-            size="lg"
-            variant="outline"
-            className="border-card/30 text-card font-body text-lg px-8 py-6 rounded-full hover:bg-card/10 bg-transparent"
-          >
-            Meet Our Guides
-          </Button>
+          {!user && (
+            <Link to="/register">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-card/30 text-card font-body text-lg px-8 py-6 rounded-full hover:bg-card/10 bg-transparent w-full"
+              >
+                Get Started Free
+              </Button>
+            </Link>
+          )}
+          {user && (
+            <Button
+              onClick={() => document.getElementById("guides")?.scrollIntoView({ behavior: "smooth" })}
+              size="lg"
+              variant="outline"
+              className="border-card/30 text-card font-body text-lg px-8 py-6 rounded-full hover:bg-card/10 bg-transparent"
+            >
+              Meet Our Guides
+            </Button>
+          )}
         </motion.div>
 
         <motion.div
@@ -119,14 +142,20 @@ const HeroSection = ({ onExplore }: { onExplore: () => void }) => {
           className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
         >
           {[
-            { value: "500+", label: "Destinations" },
-            { value: "₹0", label: "To Start" },
+            { value: "16+", label: "Destinations" },
+            { value: "6", label: "Expert Guides" },
             { value: "24/7", label: "AI Assistant" },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
+          ].map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.3 + i * 0.1 }}
+              className="text-center"
+            >
               <p className="text-2xl md:text-3xl font-display font-bold text-accent">{stat.value}</p>
-              <p className="text-sm text-card/60 font-body">{stat.label}</p>
-            </div>
+              <p className="text-sm text-card/50 font-body">{stat.label}</p>
+            </motion.div>
           ))}
         </motion.div>
       </div>
