@@ -54,19 +54,19 @@ const Navbar = () => {
                   {user.user_metadata?.full_name || user.email}
                 </span>
               </div>
-              <Button variant="ghost" size="sm" onClick={signOut} className="font-body text-xs rounded-full">
+              <Button variant="outline" size="sm" onClick={signOut} className="font-body text-xs rounded-full border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-colors">
                 <LogOut className="w-3.5 h-3.5 mr-1" /> Sign Out
               </Button>
             </div>
           ) : (
             <>
               <Link to="/login">
-                <Button variant="ghost" size="sm" className="font-body text-sm rounded-full">
+                <Button variant="outline" size="sm" className="font-body text-sm rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
                   <LogIn className="w-4 h-4 mr-1.5" /> Sign In
                 </Button>
               </Link>
               <Link to="/register">
-                <Button size="sm" className="gradient-accent text-accent-foreground font-body text-sm rounded-full">
+                <Button size="sm" className="gradient-accent text-accent-foreground font-body text-sm rounded-full shadow-md hover:shadow-lg transition-shadow">
                   <UserPlus className="w-4 h-4 mr-1.5" /> Sign Up
                 </Button>
               </Link>
@@ -98,10 +98,10 @@ const Navbar = () => {
             ) : (
               <>
                 <Link to="/login" className="block" onClick={() => setOpen(false)}>
-                  <Button variant="ghost" size="sm" className="w-full font-body">Sign In</Button>
+                  <Button variant="outline" size="sm" className="w-full font-body border-primary text-primary hover:bg-primary hover:text-primary-foreground">Sign In</Button>
                 </Link>
                 <Link to="/register" className="block" onClick={() => setOpen(false)}>
-                  <Button size="sm" className="w-full gradient-accent text-accent-foreground font-body">Sign Up</Button>
+                  <Button size="sm" className="w-full gradient-accent text-accent-foreground font-body shadow-md">Sign Up</Button>
                 </Link>
               </>
             )}
