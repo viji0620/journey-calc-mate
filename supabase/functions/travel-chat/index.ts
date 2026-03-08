@@ -42,8 +42,10 @@ When users ask to book a guide:
 1. Ask which destination/guide they're interested in
 2. Suggest the best matching guide with their details
 3. Ask for their preferred travel dates
-4. Confirm the booking details (guide name, dates, price estimate)
-5. Tell them "Your booking request has been submitted! The guide will confirm within 24 hours via email." 
+4. **ALWAYS ask how many travelers/clients will be in the group** — this is required for booking
+5. Confirm the booking details (guide name, dates, number of travelers, price estimate)
+6. Tell them "Your booking request for X travelers has been submitted! The guide will confirm within 24 hours via email."
+7. Mention that groups of 5+ may qualify for a group discount
 
 Present guide info in a clean, readable format with ratings, prices, and specialties. Be enthusiastic but concise. Use markdown formatting.`,
           },
