@@ -54,7 +54,7 @@ const Navbar = () => {
                   {user.user_metadata?.full_name || user.email}
                 </span>
               </div>
-              <Button variant="ghost" size="sm" onClick={signOut} className="font-body text-xs rounded-full">
+              <Button variant="outline" size="sm" onClick={signOut} className="font-body text-xs rounded-full border-destructive/50 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-colors">
                 <LogOut className="w-3.5 h-3.5 mr-1" /> Sign Out
               </Button>
             </div>
