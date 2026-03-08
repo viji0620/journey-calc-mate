@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plane, Menu, X, LogIn, UserPlus, LogOut, User } from "lucide-react";
+import { Plane, Menu, X, LogIn, UserPlus, LogOut, User, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
