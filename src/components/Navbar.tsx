@@ -61,12 +61,12 @@ const Navbar = () => {
           ) : (
             <>
               <Link to="/login">
-                <Button variant="ghost" size="sm" className="font-body text-sm rounded-full">
+                <Button variant="outline" size="sm" className="font-body text-sm rounded-full border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
                   <LogIn className="w-4 h-4 mr-1.5" /> Sign In
                 </Button>
               </Link>
               <Link to="/register">
-                <Button size="sm" className="gradient-accent text-accent-foreground font-body text-sm rounded-full">
+                <Button size="sm" className="gradient-accent text-accent-foreground font-body text-sm rounded-full shadow-md hover:shadow-lg transition-shadow">
                   <UserPlus className="w-4 h-4 mr-1.5" /> Sign Up
                 </Button>
               </Link>
